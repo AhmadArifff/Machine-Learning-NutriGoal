@@ -56,3 +56,10 @@ NutriGoal/
 ├── static/                 # Frontend assets
 ├── templates/              # HTML templates
 └── README.md               # Project documentation
+
+## 📦 Installing Dependencies
+
+Before running the application, make sure to install the necessary Python libraries. The dependencies are listed in the `requirements.txt` file.
+
+```bash
+pip install -r requirements.txt
