@@ -53,6 +53,7 @@ NutriGoal/
 ├── data/                   # Dataset and preprocessing scripts
 ├── models/                 # Machine learning models
 └── README.md               # Project documentation
+```bash
 
 ## 📦 Installing Dependencies
 
