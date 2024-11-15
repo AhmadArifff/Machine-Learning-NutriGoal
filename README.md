@@ -52,9 +52,6 @@ The project utilizes the **Indonesian Food and Drink Nutrition Dataset**, which 
 NutriGoal/
 ├── data/                   # Dataset and preprocessing scripts
 ├── models/                 # Machine learning models
-├── api/                    # Backend API using Flask
-├── static/                 # Frontend assets
-├── templates/              # HTML templates
 └── README.md               # Project documentation
 
 ## 📦 Installing Dependencies
