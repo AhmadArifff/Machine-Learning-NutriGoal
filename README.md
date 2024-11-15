@@ -48,15 +48,16 @@ The project utilizes the **Indonesian Food and Drink Nutrition Dataset**, which 
 - **MySQL**: Database management.
 
 ## 🗂️ Project Structure
-```bash
+```plaintext
 NutriGoal/
 ├── data/                   # Dataset and preprocessing scripts
 ├── models/                 # Machine learning models
 └── README.md               # Project documentation
+```
 
 ## 📦 Installing Dependencies
 
 Before running the application, make sure to install the necessary Python libraries. The dependencies are listed in the `requirements.txt` file.
 
-```bash
+```plaintext
 pip install -r requirements.txt
