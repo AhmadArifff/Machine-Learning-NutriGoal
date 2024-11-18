@@ -52,6 +52,7 @@ The project utilizes the **Indonesian Food and Drink Nutrition Dataset**, which 
 NutriGoal/
 ├── data/                   # Dataset and preprocessing scripts
 ├── models/                 # Machine learning models
+├── notebook/               # Code Machine learning models
 └── README.md               # Project documentation
 
 ## 📦 Installing Dependencies
