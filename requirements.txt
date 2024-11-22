@@ -1,13 +1,11 @@
 matplotlib==3.9.2
-numpy==1.24.3
 pandas==2.2.3
 seaborn==0.13.2
-tensorflow==2.10.1
-tensorflow-estimator==2.10.0
-tensorflow-io-gcs-filesystem==0.31.0
-termcolor==2.5.0
+tensorflow==2.9.0
+tensorflowjs==3.19.0
 scipy==1.10.1
 nltk==3.7
+numpy==1.24.3
 wordcloud==1.8.2
 scikit-learn==1.2.2
-re
+
