@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Predictor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
+        <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Nutrition Predictor</h1>
+        <form action="http://127.0.0.1:5000/predict" method="post" class="space-y-4">
+            <!-- Age -->
+            <div>
+                <label for="age" class="block text-gray-600 font-medium mb-1">Age:</label>
+                <input type="number" id="age" name="age" required
+                    class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Height -->
+            <div>
+                <label for="height" class="block text-gray-600 font-medium mb-1">Height (cm):</label>
+                <input type="number" id="height" name="height" required
+                    class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Weight -->
+            <div>
+                <label for="weight" class="block text-gray-600 font-medium mb-1">Weight (kg):</label>
+                <input type="number" id="weight" name="weight" required
+                    class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Gender -->
+            <div>
+                <label for="gender" class="block text-gray-600 font-medium mb-1">Gender:</label>
+                <select id="gender" name="gender" required
+                    class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="" disabled selected>Select your gender</option>
+                    <option value="0">Male</option>
+                    <option value="1">Female</option>
+                </select>
+            </div>
+
+            <!-- Activity Level -->
+            <div>
+                <label for="activity_level" class="block text-gray-600 font-medium mb-1">Activity Level:</label>
+                <select id="activity_level" name="activity_level" required
+                    class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="" disabled selected>Select activity level</option>
+                    <option value="1">1 - Sedentary (little to no exercise)</option>
+                    <option value="2">2 - Lightly active (light exercise 1-3 days/week)</option>
+                    <option value="3">3 - Moderately active (moderate exercise 3-5 days/week)</option>
+                    <option value="4">4 - Very active (hard exercise 6-7 days/week)</option>
+                    <option value="5">5 - Super active (very hard exercise or physical job)</option>
+                </select>
+            </div>
+
+            <!-- Food Preference -->
+            <div>
+                <label for="food_preference" class="block text-gray-600 font-medium mb-1">Food Preference:</label>
+                <input type="text" id="food_preference" name="food_preference"
+                    class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 rounded-md shadow-sm transition">
+                Predict
+            </button>
+        </form>
+    </div>
+</body>
+
+</html>
