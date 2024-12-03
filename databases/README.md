@@ -156,7 +156,7 @@ This guide explains how to run and test user input in the **NutriGoal** project 
 To test user inputs with the GET method directly via the browser, use the following URL structure:
 
 ```bash
-http://127.0.0.1:5000/predictjson?age=30&height=180&weight=75&gender=2&activity_level=4&diet_category=keto&has_gastric_issue=false&food_preference=Fish&food_preference=apple
+http://127.0.0.1:5000/predict?age=30&height=180&weight=75&gender=2&activity_level=4&diet_category=keto&has_gastric_issue=false&food_preference=Fish&food_preference=apple
 
 ```
 
@@ -173,7 +173,7 @@ http://127.0.0.1:5000/predictjson?age=30&height=180&weight=75&gender=2&activity_
 ### Example URL for Testing:
 
 ```bash
-http://127.0.0.1:5000/predictjson?age=30&height=180&weight=75&gender=2&activity_level=4&diet_category=keto&has_gastric_issue=false&food_preference=Fish&food_preference=apple
+http://127.0.0.1:5000/predict?age=30&height=180&weight=75&gender=2&activity_level=4&diet_category=keto&has_gastric_issue=false&food_preference=Fish&food_preference=apple
 
 ```
 
@@ -207,7 +207,7 @@ To test inputs using the HTTP POST method:
 ```bash
 curl -X POST -H "Content-Type: application/json" \
 -d '{"age": 25, "height": 175, "weight": 70, "gender": 1, "activity_level": 3, "diet_category": "vegan", "has_gastric_issue": true, "food_preference": ["Chicken", "Rice"]}' \
-http://127.0.0.1:5000/predictjson
+http://127.0.0.1:5000/predict
 
 ```
 
