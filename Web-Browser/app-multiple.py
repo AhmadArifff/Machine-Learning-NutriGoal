@@ -12,7 +12,7 @@ model1 = tf.keras.models.load_model('models/model1.h5')
 model2 = tf.keras.models.load_model('models/model2.h5')
 
 # Load dataset makanan
-food_data = pd.read_csv('../data/combine-dataset.csv')
+food_data = pd.read_csv('../data/combine-dataset-kategori.csv')
 
 # Inisialisasi Flask
 app = Flask(__name__)
