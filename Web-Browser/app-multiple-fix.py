@@ -204,17 +204,22 @@ def output_model(age, height, weight, gender, activity_level, food_preference, d
 
 
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['GET', 'POST'])
 def predict():
     try:
-        # Parsing input data
-        data = request.form
+        if request.method == 'GET':
+            data = request.args  # Use query parameters
+            # Parse food preferences for GET
+            food_preferences = data.getlist('food_preference')  # Handle multiple `food_preference` keys
+        else:
+            data = request.form  # Use form data
+            # Parse food preferences for POST
+            food_preferences = request.form.getlist('food_preference[]')  # Handle form list
 
-        # Get food preference as a list
-        food_preferences = request.form.getlist('food_preference[]')  # Capture food preferences
+        # Ensure food preferences exist
         if not food_preferences:
             return jsonify({"error": "Missing food preference."}), 400
-        
+
         # Ensure all required data is available
         age = int(data['age'])
         height = float(data['height'])
@@ -223,7 +228,6 @@ def predict():
         activity_level = int(data['activity_level'])
         diet_category = data['diet_category']  # Ensure this key is available
         has_gastric_issue = data.get('has_gastric_issue', 'false').lower() == 'true'
-        
 
         # Call the main function with the correct parameters
         result = output_model(
@@ -239,12 +243,13 @@ def predict():
         )
 
     except KeyError as e:
-        required_keys = ['age', 'height', 'weight', 'gender', 'activity_level', 'food_preference[]', 'diet_category']
+        required_keys = ['age', 'height', 'weight', 'gender', 'activity_level', 'food_preference', 'diet_category']
         missing_keys = [key for key in required_keys if key not in data]
         if missing_keys:
             return jsonify({"error": f"Missing keys: {', '.join(missing_keys)}"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
     
     
 @app.route('/predictjson', methods=['POST'])
