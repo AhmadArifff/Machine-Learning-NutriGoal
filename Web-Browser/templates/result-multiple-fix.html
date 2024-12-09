@@ -5,15 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Analysis Results</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 <body class="bg-gray-100 py-10">
 
   <!-- Container -->
   <div class="container mx-auto max-w-5xl bg-white rounded-lg shadow-md p-6 space-y-8">
+    <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Simulasi Notifikatisi</h1>
+        <form action="http://127.0.0.1:5000/history" method="post" class="space-y-4">
+          <!--<h2>Recommended Food Preference</h2>-->
+          {% for food in recommended_food_preference %}
+            <div>
+              <!--<label>ID:</label>-->
+              <input type="hidden" name="rfp_id" value="{{ food['rfp_id'] }}">
+              <input type="hidden" name="rfboc_id" value="{{ food['rfboc_id'] }}">
+              <input type="hidden" name="name" value="{{ food['Name'] }}">
+              <input type="hidden" name="calories" value="{{ food['Calories'] }}">
+              <input type="hidden" name="carbohydrate(g)" value="{{ food['Carbohydrate(g)'] }}">
+              <input type="hidden" name="protein(g)" value="{{ food['Protein(g)'] }}">
+              <input type="hidden" name="fat(g)" value="{{ food['Fat(g)'] }}">
+              {% for key, value in food.items() if key not in ['rfp_id', 'rfboc_id'] %}
+                <!--<label>{{ key.replace('_', ' ').title() }}:</label>-->
+                <input type="hidden" name="food_{{ key }}" value="{{ value }}">
+              {% endfor %}
+            </div>
+          {% endfor %}
+            <!-- Height -->
+            <div>
+                <label for="height" class="block text-gray-600 font-medium mb-1">Height (cm):</label>
+                <input type="number" id="height" name="height" required
+                class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            
+            <!-- Weight -->
+            <div>
+                <label for="weight" class="block text-gray-600 font-medium mb-1">Weight (kg):</label>
+                <input type="number" id="weight" name="weight" required
+                class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <!-- Age -->
+            <div>
+                <label for="age" class="block text-gray-600 font-medium mb-1">Age:</label>
+                <input type="number" id="age" name="age" required
+                    class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Food Preference Recommendation -->
+            <div>
+              <label for="food_preference_recommendation" class="block text-gray-600 font-medium mb-1">Food Preference:</label>
+              <select id="food_preference_recommendation" name="food_preference_recommendation[]" multiple="multiple" class="border-gray-300 rounded-lg p-2 w-full">
+                {% for food in recommended_food_preference %}
+                    <option value="{{ food['rfp_id'] }}">{{ food['Name'] }}</option>
+                {% endfor %}
+              </select>            
+            </div>
+            
+
+            <!-- Submit Button -->
+            <button type="submit"
+                class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 rounded-md shadow-sm transition">
+                Submit
+            </button>
+        </form>
     <h1 class="text-3xl font-bold text-center text-gray-800">Analysis Results</h1>
 
     <!-- Favorite Food Name -->
-    <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+    <!-- <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
       <h2 class="text-2xl font-semibold text-gray-700 mb-4">Favorite Food Name</h2>
       <ul class="space-y-2">
         <li><strong>ID:</strong> {{ favorite_food_name['ffn_id'] }}</li>
@@ -21,10 +80,10 @@
         <li><strong>Created At:</strong> {{ favorite_food_name['ffn_created_at'] }}</li>
         <li><strong>Updated At:</strong> {{ favorite_food_name['ffn_updated_at'] }}</li>
       </ul>
-    </div>
+    </div> -->
 
     <!-- Favorite Food Preference -->
-    <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+    <!-- <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
       <h2 class="text-2xl font-semibold text-gray-700 mb-4">Favorite Food Preference</h2>
       <ul class="space-y-2">
         <li><strong>ID:</strong> {{ favorite_food_preference['ffp_id'] }}</li>
@@ -32,6 +91,37 @@
         <li><strong>Name:</strong> {{ favorite_food_preference['ffp_name'] }}</li>
         <li><strong>Created At:</strong> {{ favorite_food_preference['ffp_created_at'] }}</li>
         <li><strong>Updated At:</strong> {{ favorite_food_preference['ffp_updated_at'] }}</li>
+      </ul>
+    </div> -->
+    
+    <!-- Favorite Food Name -->
+    <div class="bg-gray-50 p-4 rounded-lg shadow-sm mb-6">
+      <h2 class="text-2xl font-semibold text-gray-700 mb-4">Favorite Food Name</h2>
+      <ul class="space-y-4">
+        {% for food in favorite_food_name %}
+          <li class="p-4 bg-white rounded-lg shadow-md">
+            <p><strong>ffn_id:</strong> {{ food.ffn_id }}</p>
+            <p><strong>ffn_name:</strong> {{ food.ffn_name }}</p>
+            <p><strong>ffn_created_at:</strong> {{ food.ffn_created_at }}</p>
+            <p><strong>ffn_updated_at:</strong> {{ food.ffn_updated_at }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Favorite Food Preference -->
+    <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+      <h2 class="text-2xl font-semibold text-gray-700 mb-4">Favorite Food Preference</h2>
+      <ul class="space-y-4">
+        {% for preference in favorite_food_preference %}
+          <li class="p-4 bg-white rounded-lg shadow-md">
+            <p><strong>ffp_id:</strong> {{ preference.ffp_id }}</p>
+            <p><strong>ffn_id:</strong> {{ preference.ffn_id }}</p>
+            <p><strong>ffp_name:</strong> {{ preference.ffp_name }}</p>
+            <p><strong>ffp_created_at:</strong> {{ preference.ffp_created_at }}</p>
+            <p><strong>ffp_updated_at:</strong> {{ preference.ffp_updated_at }}</p>
+          </li>
+        {% endfor %}
       </ul>
     </div>
 
@@ -42,10 +132,10 @@
         {% for food in recommended_food_preference %}
           <li>
             <ul class="space-y-2">
-              <li><strong>ID:</strong> {{ food['rfp_id'] }}</li>
-              <li><strong>Recommendation ID:</strong> {{ food['rfboc_id'] }}</li>
+              <li><strong>rfp_id:</strong> {{ food['rfp_id'] }}</li>
+              <li><strong>rfboc_id:</strong> {{ food['rfboc_id'] }}</li>
               {% for key, value in food.items() if key not in ['rfp_id', 'rfboc_id'] %}
-                <li><strong>{{ key.replace('_', ' ').title() }}:</strong> {{ value }}</li>
+                <li><strong>{{ key.lower() }}:</strong> {{ value }}</li>
               {% endfor %}
             </ul>
           </li>
@@ -58,11 +148,33 @@
       <h2 class="text-2xl font-semibold text-gray-700 mb-4">Recommended Food Based on Calories</h2>
       <ul class="space-y-2">
         {% for key, value in recommended_food_based_on_calories.items() %}
-          <li><strong>{{ key.replace('_', ' ').title() }}:</strong> {{ value }}</li>
+          <li><strong>{{ key.lower() }}:</strong> {{ value }}</li>
         {% endfor %}
       </ul>
     </div>
   </div>
+  <!-- JavaScript Logic -->
+  <script>
+    $(document).ready(function() {
+      // Initialize Select2
+      $('#food_preference_recommendation').select2({
+        placeholder: "Select Recommended Food Preference",
+        allowClear: true
+      });
 
+      // Limit number of selections based on Rfboc Meal Schedule (Day)
+      const maxSelections = {{ recommended_food_based_on_calories['rfboc_meal_schedule(day)'] | int }};
+      $('#food_preference_recommendation').on('select2:select', function (e) {
+        if ($(this).select2('data').length > maxSelections) {
+          // Alert user if max selection exceeded
+          alert(`You can only select up to ${maxSelections} items.`);
+          // Remove last selected option
+          const lastSelected = e.params.data.id;
+          const selected = $(this).val();
+          $(this).val(selected.filter(val => val !== lastSelected)).trigger('change');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
