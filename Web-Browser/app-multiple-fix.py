@@ -355,6 +355,100 @@ def history():
     except Exception as e:
         # Tangkap error lain dan kembalikan respons error
         return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+    
+    
+@app.route('/historytest', methods=['POST'])
+def historytest():
+    try:
+        # Ambil data dari form
+        weight = request.form.get('weight', type=float)
+        age = request.form.get('age', type=int)
+        height = request.form.get('height', type=int)
+        
+        # Ambil ID makanan yang dipilih dari elemen select multiple
+        selected_ids = request.form.getlist('food_preference_recommendation[]')
+        
+        # Ambil daftar semua rekomendasi makanan dari form
+        all_rfp_ids = request.form.getlist('rfp_id')
+        all_names = request.form.getlist('name')
+        all_calories = request.form.getlist('calories', type=float)
+        all_carbohydrate = request.form.getlist('carbohydrate(g)', type=float)
+        all_protein = request.form.getlist('protein(g)', type=float)
+        all_fat = request.form.getlist('fat(g)', type=float)
+        rfboc_gender = request.form.get('rfboc_gender')
+        rfboc_activity_level = request.form.get('rfboc_activity_level')
+        rfboc_diet_type = request.form.get('rfboc_diet_type')
+        rfboc_history_of_gastritis_or_gerd = request.form.get('rfboc_history_of_gastritis_or_gerd')
+        user_id = request.form.get('user_id')
+        
+        # Ambil data 'preference' dari elemen yang dihasilkan dengan perulangan
+        favorite_food_preference = []
+        index = 1  # Inisialisasi indeks untuk elemen input
+        while True:
+            ffp_id_key = f"ffp_id_{index}"
+            ffp_name_key = f"ffp_name_{index}"
+            
+            # Cek apakah elemen berikutnya ada
+            ffp_id = request.form.get(ffp_id_key)
+            ffp_name = request.form.get(ffp_name_key)
+            
+            if not ffp_id or not ffp_name:  # Jika data tidak ditemukan, keluar dari loop
+                break
+            
+            # Tambahkan data ke daftar preference
+            favorite_food_preference.append({
+                "id": ffp_id,
+                "name": ffp_name
+            })
+            index += 1  # Tingkatkan indeks
+
+        # Validasi input
+        if not (weight and age and height and selected_ids):
+            return jsonify({"error": "Missing or invalid input data"}), 400
+
+        # Filter makanan sesuai ID yang dipilih
+        food_recommendation = []
+        for i in range(len(all_rfp_ids)):
+            if all_rfp_ids[i] in selected_ids:
+                food = {
+                    "hfr_id": i,
+                    "hrf_id": 1,
+                    "rfp_id": all_rfp_ids[i],
+                    "hfr_name": all_names[i],
+                    "hfr_calories": all_calories[i] if i < len(all_calories) else None,
+                    "hfr_carbohydrate(g)": all_carbohydrate[i] if i < len(all_carbohydrate) else None,
+                    "hfr_protein(g)": all_protein[i] if i < len(all_protein) else None,
+                    "hfr_fat(g)": all_fat[i] if i < len(all_fat) else None
+                }
+                food_recommendation.append(food)
+
+        # Buat timestamp
+        timestamp = datetime.utcnow().isoformat()
+
+        # Struktur JSON output
+        result = {
+            "user_id": user_id,
+            "rfboc_gender": rfboc_gender,
+            "history_recommendation_food_per_day": {
+                "hrf_id": 1,
+                "history_food_recommendation": food_recommendation,
+                "food_preference": favorite_food_preference,
+                "body_weight": weight,
+                "age": age,
+                "height": height,
+                "rfboc_activity_level": rfboc_activity_level,
+                "rfboc_diet_type": rfboc_diet_type,
+                "rfboc_history_of_gastritis_or_gerd": rfboc_history_of_gastritis_or_gerd,
+                "created_at": timestamp,
+                "diet_time": timestamp
+            },
+        }
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        # Tangkap error lain dan kembalikan respons error
+        return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
 
 
