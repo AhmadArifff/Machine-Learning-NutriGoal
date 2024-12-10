@@ -172,7 +172,7 @@ recommended_food_based_on_calories
        |---< history_recommendation_food_per_day
                         |
                         |---< hrfpd_id >--- history_food_recommendation
-
+```
 
 # How to Run Test User Input in NutriGoal Project
 
