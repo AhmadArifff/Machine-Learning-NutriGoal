@@ -158,6 +158,22 @@ Kolom ini merepresentasikan jenis kelamin pengguna.
 - **Male (True):** Jika pengguna adalah laki-laki.
 - **Female (False):** Jika pengguna adalah perempuan.
 
+## ERD Diagram (Illustration)
+
+```plaintext
+recommended_food_based_on_calories
+       |
+       |---< rfboc_id >--- recommended_food_preference
+       |                          |
+       |                          |---< ffp_id >--- favorite_food_preference
+       |                                               |
+       |                                               |---< ffn_id >--- favorite_food_name
+       |
+       |---< history_recommendation_food_per_day
+                        |
+                        |---< hrfpd_id >--- history_food_recommendation
+
+
 # How to Run Test User Input in NutriGoal Project
 
 This guide explains how to run and test user input in the **NutriGoal** project using HTTP POST and GET methods. While browsers only support the GET method when directly entering a URL into the address bar, this guide also covers using tools like **Postman** or **curl** to test inputs via the POST method.
