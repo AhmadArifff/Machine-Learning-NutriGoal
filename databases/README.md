@@ -134,7 +134,7 @@ Tabel ini mencatat makanan yang direkomendasikan dari riwayat harian pengguna.
 
 4. `history_food_recommendation` -> `recommended_food_preference`
    - `rfp_id` di `history_food_recommendation` merujuk ke `recommended_food_preference.rfp_id`.
-```
+
 ## Penjelasan Kolom Data
 
 ### 1. **rfboc_history_of_gastritis_or_gerd**
