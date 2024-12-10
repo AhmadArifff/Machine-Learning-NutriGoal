@@ -6,7 +6,7 @@ USE food_recommendation_system;
 
 -- Tabel favorite_food_name
 CREATE TABLE favorite_food_name (
-    ffn_id VARCHAR(255) PRIMARY KEY,
+    ffn_id INT PRIMARY KEY AUTO_INCREMENT,
     ffn_name VARCHAR(255) NOT NULL,
     ffn_created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     ffn_updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -14,8 +14,8 @@ CREATE TABLE favorite_food_name (
 
 -- Tabel favorite_food_preference
 CREATE TABLE favorite_food_preference (
-    ffp_id VARCHAR(255) PRIMARY KEY,
-    ffn_id VARCHAR(255),
+    ffp_id INT PRIMARY KEY AUTO_INCREMENT,
+    ffn_id INT,
     ffp_name VARCHAR(255) NOT NULL,
     ffp_created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     ffp_updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -24,15 +24,15 @@ CREATE TABLE favorite_food_preference (
 
 -- Tabel recommended_food_based_on_calories
 CREATE TABLE recommended_food_based_on_calories (
-    rfboc_id VARCHAR(255) PRIMARY KEY,
-    user_id VARCHAR(255),
+    rfboc_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
     rfboc_diet_type VARCHAR(255) NOT NULL,
-    rfboc_history_of_gastritis_or_gerd VARCHAR(10) NOT NULL,
+    rfboc_history_of_gastritis_or_gerd BOOLEAN NOT NULL,
     rfboc_age INT NOT NULL,
     rfboc_height_cm FLOAT NOT NULL,
     rfboc_weight_kg FLOAT NOT NULL,
-    rfboc_gender VARCHAR(10) NOT NULL,
-    rfboc_activity_level VARCHAR(255) NOT NULL,
+    rfboc_gender BOOLEAN NOT NULL,
+    rfboc_activity_level INT NOT NULL,
     rfboc_meal_schedule_day INT NOT NULL,
     rfboc_daily_calorie_needs FLOAT NOT NULL,
     rfboc_bmr FLOAT NOT NULL,
@@ -56,8 +56,8 @@ CREATE TABLE recommended_food_based_on_calories (
 -- Tabel recommended_food_preference
 CREATE TABLE recommended_food_preference (
     rfp_id VARCHAR(255) PRIMARY KEY,
-    rfboc_id VARCHAR(255),
-    ffp_id VARCHAR(255),
+    rfboc_id INT,
+    ffp_id INT,
     name VARCHAR(255) NOT NULL,
     calories FLOAT NOT NULL,
     protein_g FLOAT NOT NULL,
@@ -76,25 +76,29 @@ CREATE TABLE recommended_food_preference (
 
 -- Tabel history_recommendation_food_per_day
 CREATE TABLE history_recommendation_food_per_day (
-    hrf_id INT PRIMARY KEY,
-    user_id INT NOT NULL,
-    age INT NOT NULL,
-    body_weight FLOAT NOT NULL,
-    height FLOAT NOT NULL,
-    diet_time DATETIME NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    hrfpd_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    age INT,
+    body_weight DECIMAL(10, 2),
+    height DECIMAL(10, 2),
+    diet_time DATETIME,
+    created_at DATETIME,
+    rfboc_activity_level INT,
+    rfboc_diet_type VARCHAR(50),
+    rfboc_gender BOOLEAN,
+    rfboc_history_of_gastritis BOOLEAN
 );
 
 -- Tabel history_food_recommendation
 CREATE TABLE history_food_recommendation (
-    hfr_id INT PRIMARY KEY,
-    hfr_name VARCHAR(255) NOT NULL,
-    hfr_calories FLOAT NOT NULL,
-    hfr_carbohydrate_g FLOAT NOT NULL,
-    hfr_fat_g FLOAT NOT NULL,
-    hfr_protein_g FLOAT NOT NULL,
-    hrf_id INT NOT NULL,
+    hfr_id INT AUTO_INCREMENT PRIMARY KEY,
+    hfr_name VARCHAR(255),
+    hfr_calories DECIMAL(10, 2),
+    hfr_carbohydrate DECIMAL(10, 2),
+    hfr_fat DECIMAL(10, 2),
+    hfr_protein DECIMAL(10, 2),
+    hrfpd_id INT,
     rfp_id VARCHAR(255),
-    FOREIGN KEY (hrf_id) REFERENCES history_recommendation_food_per_day(hrf_id),
+    FOREIGN KEY (hrfpd_id) REFERENCES history_recommendation_food_per_day(hrfpd_id),
     FOREIGN KEY (rfp_id) REFERENCES recommended_food_preference(rfp_id)
 );

@@ -138,11 +138,11 @@ def output_model(age, height, weight, gender, activity_level, food_preference, d
         
         # Activity Level
         activity_level_mapping = {
-            1: "1. Sedentary (little to no exercise)",
-            2: "2. Lightly active (light exercise 1-3 days/week)",
-            3: "3. Moderately active (moderate exercise 3-5 days/week)",
-            4: "4. Very active (hard exercise 6-7 days/week)",
-            5: "5. Super active (very hard exercise or physical job)"
+            1: 1,
+            2: 2,
+            3: 3,
+            4: 4,
+            5: 5
         }
         activity_description = activity_level_mapping.get(activity_level, "Unknown")
         timestamp = datetime.now().isoformat()
@@ -216,11 +216,11 @@ def output_model(age, height, weight, gender, activity_level, food_preference, d
                 "rfboc_id": 1,
                 "user_id": 1,
                 "rfboc_diet_type": diet_category,
-                "rfboc_history_of_gastritis_or_gerd": "Yes" if has_gastric_issue else "No",
+                "rfboc_history_of_gastritis_or_gerd": False if has_gastric_issue else True,
                 "rfboc_age": age,
                 "rfboc_height_(cm)": height,
                 "rfboc_weight_(kg)": weight,
-                "rfboc_gender": "Male" if gender == 1 else "Female",
+                "rfboc_gender": False if gender == 1 else True,
                 "rfboc_activity_level": activity_description,
                 "rfboc_meal_schedule(day)": eating_pattern,
                 "rfboc_daily_calorie_needs": f"{daily_calorie_needs:.2f}",
@@ -311,6 +311,11 @@ def history():
         all_carbohydrate = request.form.getlist('carbohydrate(g)', type=float)
         all_protein = request.form.getlist('protein(g)', type=float)
         all_fat = request.form.getlist('fat(g)', type=float)
+        rfboc_gender = request.form.get('rfboc_gender')
+        rfboc_activity_level = request.form.get('rfboc_activity_level')
+        rfboc_diet_type = request.form.get('rfboc_diet_type')
+        rfboc_history_of_gastritis_or_gerd = request.form.get('rfboc_history_of_gastritis_or_gerd')
+        user_id = request.form.get('user_id')
 
         # Validasi input
         if not (weight and age and height and selected_ids):
@@ -322,7 +327,7 @@ def history():
             if all_rfp_ids[i] in selected_ids:
                 food = {
                     "hfr_id": i,
-                    "hrf_id": 1,
+                    "hrfpd_id": 1,
                     "rfp_id": all_rfp_ids[i],
                     "hfr_name": all_names[i],
                     "hfr_calories": all_calories[i] if i < len(all_calories) else None,
@@ -338,12 +343,16 @@ def history():
         # Struktur JSON output
         result = {
             "history_recommendation_food_per_day": {
-                "hrf_id": 1,
-                "user_id": 1,  # User ID statis
+                "hrfpd_id": 1,
+                "user_id": user_id,  # User ID statis
                 "created_at": timestamp,
                 "body_weight": weight,
                 "age": age,
                 "height": height,
+                "rfboc_gender": False if rfboc_gender == 1 else True,
+                "rfboc_activity_level": rfboc_activity_level,
+                "rfboc_diet_type": rfboc_diet_type,
+                "rfboc_history_of_gastritis_or_gerd": False if rfboc_history_of_gastritis_or_gerd else True,
                 "created_at": timestamp,
                 "diet_time": timestamp
             },
@@ -412,7 +421,7 @@ def historytest():
             if all_rfp_ids[i] in selected_ids:
                 food = {
                     "hfr_id": i,
-                    "hrf_id": 1,
+                    "hrfpd_id": 1,
                     "rfp_id": all_rfp_ids[i],
                     "hfr_name": all_names[i],
                     "hfr_calories": all_calories[i] if i < len(all_calories) else None,
@@ -428,9 +437,9 @@ def historytest():
         # Struktur JSON output
         result = {
             "user_id": user_id,
-            "rfboc_gender": rfboc_gender,
+            "rfboc_gender": False if rfboc_gender == 1 else True,
             "history_recommendation_food_per_day": {
-                "hrf_id": 1,
+                "hrfpd_id": 1,
                 "history_food_recommendation": food_recommendation,
                 "food_preference": favorite_food_preference,
                 "body_weight": weight,
@@ -438,7 +447,7 @@ def historytest():
                 "height": height,
                 "rfboc_activity_level": rfboc_activity_level,
                 "rfboc_diet_type": rfboc_diet_type,
-                "rfboc_history_of_gastritis_or_gerd": rfboc_history_of_gastritis_or_gerd,
+                "rfboc_history_of_gastritis_or_gerd": False if rfboc_history_of_gastritis_or_gerd else True,
                 "created_at": timestamp,
                 "diet_time": timestamp
             },
