@@ -284,6 +284,161 @@ http://127.0.0.1:5000/predict
 
 ```
 
+# API Documentation
+
+## Overview
+
+This API provides endpoints to manage food recommendation history based on user input. The two primary endpoints are:
+
+- `/historytest`: Processes food preference recommendations.
+- `/history`: Retrieves historical food recommendations based on user data.
+
+## Base URL
+
+The base URL for the API is:
+```bash
+http://0.0.0.0:5000
+
+```
+
+## Endpoints
+
+### 1. `/historytest`
+
+#### Method: `POST`
+
+**Description**: This endpoint allows you to submit user data and receive food recommendations based on the provided preferences.
+
+**Request URL**:
+```bash
+POST http://0.0.0.0:5000/historytest
+```
+
+
+**Headers**:
+- `Content-Type: application/json`
+
+**Request Body** (JSON):
+```json
+{
+  "rfp_id": ["7757ddc9-5135-4ce7-84e1-8cd700827dfa", "641828d7-ce63-4267-ac3b-d8fd9f6129ee", "46b395f9-0778-4637-b4c5-ba3b25907d09"],
+  "rfboc_id": "1",
+  "name": ["spiced orange and cranberry snacking cake", "orange and passionfruit cream", "strawberry breakfast crepes mexico"],
+  "calories": [324.7, 324.6, 324.4],
+  "carbohydrate(g)": [47.0, 50.2, 51.9],
+  "protein(g)": [3.7, 6.5, 12.3],
+  "fat(g)": [14.2, 11.8, 7.9],
+  "height": 175,
+  "weight": 60,
+  "age": 21,
+  "food_preference_recommendation": ["7757ddc9-5135-4ce7-84e1-8cd700827dfa", "641828d7-ce63-4267-ac3b-d8fd9f6129ee"],
+  "favorite_food_preference": [
+    {
+      "ffp_id": 1,
+      "ffp_name": "orange"
+    },
+    {
+      "ffp_id": 2,
+      "ffp_name": "strawberry"
+    }
+  ],
+  "recommended_food_based_on_calories": {
+    "rfboc_activity_level": 5,
+    "rfboc_diet_type": "keto",
+    "rfboc_meal_schedule_(day)": 2, 
+    "history_of_gastritis_or_gerd": true
+  },
+  "user_id": "1",
+  "gender": false
+}
+
+```
+
+**Response**:
+
+- `200 OK`: Returns food recommendations and user data.
+- `400 Bad Request`: Returns error messages for invalid or missing fields.
+- `500 Internal Server Error`: Returns unexpected error messages.
+
+### Example using Postman:
+
+1. Open Postman.
+2. Set the request type to `POST`.
+3. Enter the URL: `http://0.0.0.0:5000/historytest`.
+4. In the "Headers" tab, add `Content-Type` with the value `application/json`.
+5. In the "Body" tab, select `raw` and paste the JSON request body.
+6. Click `Send` to submit the request.
+
+### 2. `/history`
+
+### Method: `POST`
+
+**Description**: This endpoint allows you to submit user data and receive a history of food recommendations based on preferences.
+
+**Request URL**:
+
+```bash
+POST http://0.0.0.0:5000/history
+
+```
+
+**Headers**:
+
+- `Content-Type: application/json`
+
+**Request Body** (JSON):
+
+```json
+{
+  "rfp_id": ["7757ddc9-5135-4ce7-84e1-8cd700827dfa", "641828d7-ce63-4267-ac3b-d8fd9f6129ee", "46b395f9-0778-4637-b4c5-ba3b25907d09"],
+  "rfboc_id": "1",
+  "name": ["spiced orange and cranberry snacking cake", "orange and passionfruit cream", "strawberry breakfast crepes mexico"],
+  "calories": [324.7, 324.6, 324.4],
+  "carbohydrate(g)": [47.0, 50.2, 51.9],
+  "protein(g)": [3.7, 6.5, 12.3],
+  "fat(g)": [14.2, 11.8, 7.9],
+  "height": 175,
+  "weight": 60,
+  "age": 21,
+  "food_preference_recommendation": ["7757ddc9-5135-4ce7-84e1-8cd700827dfa", "641828d7-ce63-4267-ac3b-d8fd9f6129ee"],
+  "favorite_food_preference": [
+    {
+      "ffp_id": 1,
+      "ffp_name": "orange"
+    },
+    {
+      "ffp_id": 2,
+      "ffp_name": "strawberry"
+    }
+  ],
+  "recommended_food_based_on_calories": {
+    "rfboc_activity_level": 5,
+    "rfboc_diet_type": "keto",
+    "rfboc_meal_schedule_(day)": 2, 
+    "history_of_gastritis_or_gerd": true
+  },
+  "user_id": "1",
+  "gender": false
+}
+
+```
+
+**Response**:
+
+- `200 OK`: Returns a history of food recommendations and user data.
+- `400 Bad Request`: Returns error messages for invalid or missing fields.
+- `500 Internal Server Error`: Returns unexpected error messages.
+
+### Example using Postman:
+
+1. Open Postman.
+2. Set the request type to `POST`.
+3. Enter the URL: `http://0.0.0.0:5000/history`.
+4. In the "Headers" tab, add `Content-Type` with the value `application/json`.
+5. In the "Body" tab, select `raw` and paste the JSON request body.
+6. Click `Send` to submit the request.
+
+
 ---
 
 ### Key Notes:

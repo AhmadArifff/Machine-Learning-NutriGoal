@@ -5,6 +5,11 @@ import numpy as np
 import joblib
 import re
 
+
+tf.config.set_visible_devices([], 'GPU')  # Disable GPU jika terdeteksi
+
+print("Available devices:", tf.config.list_physical_devices('CPU'))
+
 # Load scaler dan model
 scaler1 = joblib.load('models/scaler1.pkl')
 scaler2 = joblib.load('models/scaler2.pkl')

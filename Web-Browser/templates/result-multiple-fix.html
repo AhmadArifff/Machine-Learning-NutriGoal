@@ -15,7 +15,7 @@
   <div class="container mx-auto max-w-5xl bg-white rounded-lg shadow-md p-6 space-y-8">
     <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Simulasi Notifikatisi</h1>
         <!-- <form action="http://127.0.0.1:5000/history" method="post" class="space-y-4">-->
-        <form action="http://127.0.0.1:5000/history" method="post" class="space-y-4">
+        <form action="/history" method="post" class="space-y-4">
           <!--<h2>Recommended Food Preference</h2>-->
           {% for food in recommended_food_preference %}
             <div>
@@ -193,7 +193,7 @@
       });
 
       // Limit number of selections based on Rfboc Meal Schedule (Day)
-      const maxSelections = {{ recommended_food_based_on_calories['rfboc_meal_schedule(day)'] | int }};
+      const maxSelections = {{ recommended_food_based_on_calories['rfboc_meal_schedule_(day)'] | int }};
       $('#food_preference_recommendation').on('select2:select', function (e) {
         if ($(this).select2('data').length > maxSelections) {
           // Alert user if max selection exceeded
