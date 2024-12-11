@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Predictor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
+        <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Nutrition Predictor</h1>
+        <form action="/predict" method="post" class="space-y-4">
+            
+            <!-- Height -->
+            <div>
+                <label for="height" class="block text-gray-600 font-medium mb-1">Height (cm):</label>
+                <input type="number" id="height" name="height" required
+                class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            
+            <!-- Weight -->
+            <div>
+                <label for="weight" class="block text-gray-600 font-medium mb-1">Weight (kg):</label>
+                <input type="number" id="weight" name="weight" required
+                class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <!-- Age -->
+            <div>
+                <label for="age" class="block text-gray-600 font-medium mb-1">Age:</label>
+                <input type="number" id="age" name="age" required
+                    class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Gender -->
+            <div>
+                <label class="block text-gray-600 font-medium mb-1">Gender:</label>
+                <div class="flex items-center">
+                    <input type="radio" id="male" name="gender" value="0" required class="mr-2">
+                    <label for="male" class="text-gray-600 mr-4">Male</label>
+                    <input type="radio" id="female" name="gender" value="1" required class="mr-2">
+                    <label for="female" class="text-gray-600">Female</label>
+                </div>
+            </div>
+
+            
+            <!-- Gastritis/GERD History -->
+            <div>
+                <label class="block text-gray-600 font-medium mb-1">Do you have a history of gastritis or GERD?</label>
+                <div class="flex items-center">
+                    <input type="radio" id="yes" name="has_mag_history" value="True" required class="mr-2">
+                    <label for="true" class="text-gray-600 mr-4">Yes</label>
+                    <input type="radio" id="no" name="has_mag_history" value="False" required class="mr-2">
+                    <label for="false" class="text-gray-600">No</label>
+                </div>
+            </div>
+            
+            <!-- Activity Level -->
+            <div>
+                <label for="activity_level" class="block text-gray-600 font-medium mb-1">Activity Level:</label>
+                <select id="activity_level" name="activity_level" required
+                    class="w-full text-gray-600 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="" disabled selected>Select activity level</option>
+                    <option value="1">1 - Sedentary (little to no exercise)</option>
+                    <option value="2">2 - Lightly active (light exercise 1-3 days/week)</option>
+                    <option value="3">3 - Moderately active (moderate exercise 3-5 days/week)</option>
+                    <option value="4">4 - Very active (hard exercise 6-7 days/week)</option>
+                    <option value="5">5 - Super active (very hard exercise or physical job)</option>
+                </select>
+            </div>
+            <!-- Diet Type -->
+            <div>
+                <label class="block text-gray-600 font-medium mb-1">Diet Type:</label>
+                <div class="flex items-center">
+                    <input type="radio" id="keto" name="diet_category" value="keto" required class="mr-2">
+                    <label for="keto" class="text-gray-600 mr-4">Keto</label>
+                    <input type="radio" id="vegan" name="diet_category" value="vegan" required class="mr-2">
+                    <label for="vegan" class="text-gray-600 mr-4">Vegan</label>
+                </div>
+            </div>
+        
+            <!-- Food Preference -->
+            <div>
+                <label for="food_preference" class="block text-gray-600 font-medium mb-1">Food Preference:</label>
+                <select id="food_preference" name="food_preference[]" multiple="multiple" required class="w-full border-gray-300 rounded-md shadow-sm">
+                    <!-- Food options will be generated by the backend -->
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 rounded-md shadow-sm transition">
+                Predict
+            </button>
+        </form>
+    </div>
+    <script>
+        $(document).ready(function () {
+            // Initialize Select2
+            $('#food_preference').select2({
+                placeholder: "Select your preferred food",
+                allowClear: true,
+                width: '100%'
+            });
+
+            // Add options to Select2
+            const options = {
+                vegan: [
+                    // # Fruits
+                    "Apple", "Banana", "Orange", "Mango", "Strawberry", "Pineapple", "Watermelon", "Papaya", 
+                    "Grape", "Blueberry", "Blackberry", "Raspberry", "Cherry", "Kiwi", "Lemon", "Lime", 
+                    "Peach", "Pear", "Plum", "Pomegranate", "Avocado", "Coconut", "Guava", "Fig", "Dates", 
+                    "Lychee", "Dragonfruit", "Persimmon", "Mulberry", "Cranberry", "Cantaloupe", "Honeydew", 
+                    "Starfruit", "Durian", "Jackfruit", "Passionfruit", "Rambutan", "Longan", "Soursop", 
+                    "Gooseberry", "Mangosteen", "Sugar Apple", "Salak", "Elderberry", "Quince", "Tamarind", 
+                    "Sapodilla", "Bael", "Breadfruit", "Ackee", "Jujube", "Medlar", "Currant", "Acerola", 
+                    "Loquat", "Boysenberry", "Ugli Fruit",
+                
+                    // # Vegetables
+                    "Carrot", "Potato", "Tomato", "Onion", "Garlic", "Spinach", "Lettuce", "Kale", "Broccoli", 
+                    "Cauliflower", "Cucumber", "Zucchini", "Eggplant", "Bell Pepper", "Chili Pepper", "Beet", 
+                    "Radish", "Turnip", "Sweet Potato", "Pumpkin", "Squash", "Celery", "Asparagus", "Green Bean", 
+                    "Pea", "Okra", "Cabbage", "Bok Choy", "Brussels Sprouts", "Artichoke", "Leek", "Fennel", 
+                    "Shallot", "Ginger", "Turmeric", "Collard Greens", "Mustard Greens", "Swiss Chard", 
+                    "Watercress", "Arugula", "Taro", "Yam", "Bamboo Shoot", "Corn", "Parsley", "Cilantro", 
+                    "Basil", "Thyme", "Rosemary", "Oregano", "Mint", "Chives", "Dill", "Parsley", "Cilantro", 
+                    "Basil", "Thyme","Rosemary", "Sage", "Oregano", "Tarragon", "Marjoram", "Chives", "Curry Leaf", 
+                    "Bay Leaf",
+                ],
+                keto: [
+                    // # Fruits
+                    "Apple", "Banana", "Orange", "Mango", "Strawberry", "Pineapple", "Watermelon", "Papaya", 
+                    "Grape", "Blueberry", "Blackberry", "Raspberry", "Cherry", "Kiwi", "Lemon", "Lime", 
+                    "Peach", "Pear", "Plum", "Pomegranate", "Avocado", "Coconut", "Guava", "Fig", "Dates", 
+                    "Lychee", "Dragonfruit", "Persimmon", "Mulberry", "Cranberry", "Cantaloupe", "Honeydew", 
+                    "Starfruit", "Durian", "Jackfruit", "Passionfruit", "Rambutan", "Longan", "Soursop", 
+                    "Gooseberry", "Mangosteen", "Sugar Apple", "Salak", "Elderberry", "Quince", "Tamarind", 
+                    "Sapodilla", "Bael", "Breadfruit", "Ackee", "Jujube", "Medlar", "Currant", "Acerola", 
+                    "Loquat", "Boysenberry", "Ugli Fruit",
+                
+                    // # Vegetables
+                    "Carrot", "Potato", "Tomato", "Onion", "Garlic", "Spinach", "Lettuce", "Kale", "Broccoli", 
+                    "Cauliflower", "Cucumber", "Zucchini", "Eggplant", "Bell Pepper", "Chili Pepper", "Beet", 
+                    "Radish", "Turnip", "Sweet Potato", "Pumpkin", "Squash", "Celery", "Asparagus", "Green Bean", 
+                    "Pea", "Okra", "Cabbage", "Bok Choy", "Brussels Sprouts", "Artichoke", "Leek", "Fennel", 
+                    "Shallot", "Ginger", "Turmeric", "Collard Greens", "Mustard Greens", "Swiss Chard", 
+                    "Watercress", "Arugula", "Taro", "Yam", "Bamboo Shoot", "Corn", "Parsley", "Cilantro", 
+                    "Basil", "Thyme", "Rosemary", "Oregano", "Mint", "Chives", "Dill", "Parsley", "Cilantro", 
+                    "Basil", "Thyme","Rosemary", "Sage", "Oregano", "Tarragon", "Marjoram", "Chives", "Curry Leaf", 
+                    "Bay Leaf",
+
+                    // # Livestock
+                    "Chicken", "Duck", "Turkey", "Goose", "Quail", "Rabbit", "Cow", "Pig", "Sheep", "Goat", "beef",
+                    "Buffalo", "Camel", "Yak", "Horse", "Deer", "Elk", "Bison", "Llama", "Kangaroo", "Guinea Pig", 
+                    "Pigeon", "Ostrich", "Emu", "Alpaca", "Peacock", "Ferret", "Pheasant", "Mink", "Weasel", 
+                    "Racoon", "Capybara", "Armadillo", "Porcupine", "Hyrax", "Gaur", "Zebra", "Wildebeest", 
+                    "Antelope", "Gazelle", "Okapi", "Walrus", "Seal", "Sea Lion", "Manatee", "Dolphin", 
+                    "Beluga Whale", "Narwhal", "Orca", "Sperm Whale", "Humpback Whale", "Blue Whale", 
+                    "Gray Whale", "Fin Whale", "Minke Whale", "Bowhead Whale", "Beaked Whale", "Pilot Whale", 
+                    "Killer Whale", "Dugong", "Steller's Sea Cow", "Indian Ocean Humpback Dolphin", 
+                    "Atlantic Humpback Dolphin", "Pacific Humpback Dolphin", "Indus River Dolphin", 
+                    "Ganges River Dolphin", "Bottlenose Dolphin", "Spinner Dolphin", "Risso's Dolphin", 
+                    "Common Dolphin", "Short-finned Pilot Whale", "Long-finned Pilot Whale"
+                ]
+            };
+            
+            // Update options based on selected diet type
+            $('input[name="diet_category"]').change(function () {
+                const selectedDiet = $('input[name="diet_category"]:checked').val();
+                const foodOptions = options[selectedDiet];
+
+                // Clear existing options
+                $('#food_preference').empty();
+
+                // Add new options
+                foodOptions.forEach(option => {
+                    $('#food_preference').append(new Option(option, option));
+                });
+
+                // Refresh Select2
+                $('#food_preference').trigger('change');
+            });
+        });
+        document.getElementById('diet-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+        
+            const formData = new FormData(this);
+            const data = {};
+        
+            formData.forEach((value, key) => {
+                if (key === 'food_preference[]') {
+                    if (!data.food_preference) {
+                        data.food_preference = [];
+                    }
+                    data.food_preference.push(value);
+                } else {
+                    data[key] = value;
+                }
+            });
+        
+            // Send the data to your backend
+            fetch('your-backend-endpoint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+                // Handle the response from your backend
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+        
+    </script>
+</body>
+
+</html>

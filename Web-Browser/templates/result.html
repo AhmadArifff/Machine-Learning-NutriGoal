@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center">Nutrition Prediction Result</h1>
+        
+        <!-- Card for User Input Data -->
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">User Input Data</h2>
+            <p><strong>Age:</strong> {{ age }}</p>
+            <p><strong>Height (cm):</strong> {{ height }}</p>
+            <p><strong>Weight (kg):</strong> {{ weight }}</p>
+            <p><strong>Gender:</strong> {{ gender }}</p>
+            <p><strong>Activity Level:</strong> {{ activity_level }}</p>
+            <p><strong>Food Preference:</strong> {{ food_preference }}</p>
+        </div>
+        
+        <!-- Card for Recommended Foods by BMR -->
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Recommended Food Based on BMR</h2>
+            <p><strong>Total Calories:</strong> {{ BMR | round(2) }}</p>
+            <p>Total Kalori dari Top 10 Rekomendasi Makanan: {{ total_calories_bmr | round(2)}}</p>
+            <table class="min-w-full bg-white border border-gray-300">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="py-2 px-4 border">Name</th>
+                        <th class="py-2 px-4 border">Calories</th>
+                        <th class="py-2 px-4 border">Protein (g)</th>
+                        <th class="py-2 px-4 border">Fat (g)</th>
+                        <th class="py-2 px-4 border">Carbohydrate (g)</th>
+                        <th class="py-2 px-4 border">Fiber (g)</th>
+                        <th class="py-2 px-4 border">Cholesterol (mg)</th>
+                        <th class="py-2 px-4 border">Sodium (mg)</th>
+                        <th class="py-2 px-4 border">Sugar (g)</th>
+                        <th class="py-2 px-4 border">SaturatedFat(g)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if recommended_food_bmr %}
+                    {% for item in recommended_food_bmr %}
+                    <tr>
+                        <td class="py-2 px-4 border">{{ item.Name }}</td>
+                        <td class="py-2 px-4 border">{{ item.Calories }}</td>
+                        <td class="py-2 px-4 border">{{ item['Protein(g)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Fat(g)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Carbohydrate(g)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Fiber(g)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Cholesterol(mg)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Sodium(mg)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Sugar(g)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['SaturatedFat(g)'] }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="10" class="py-2 px-4 border text-center">No data available</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Card for Recommended Foods by Daily Calorie Needs -->
+        <div class="bg-white shadow-lg rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Recommended Food Based on Daily Calorie Needs</h2>
+            <p><strong>Total Calories:</strong> {{ daily_calorie_needs | round(2) }}</p>
+            <table class="min-w-full bg-white border border-gray-300">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="py-2 px-4 border">Name</th>
+                        <th class="py-2 px-4 border">Calories</th>
+                        <th class="py-2 px-4 border">Protein (g)</th>
+                        <th class="py-2 px-4 border">Fat (g)</th>
+                        <th class="py-2 px-4 border">Carbohydrate (g)</th>
+                        <th class="py-2 px-4 border">Fiber (g)</th>
+                        <th class="py-2 px-4 border">Cholesterol (mg)</th>
+                        <th class="py-2 px-4 border">Sodium (mg)</th>
+                        <th class="py-2 px-4 border">Sugar (g)</th>
+                        <th class="py-2 px-4 border">SaturatedFat(g)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if recommended_food_daily %}
+                    {% for item in recommended_food_calories %}
+                    <tr>
+                        <td class="py-2 px-4 border">{{ item.Name }}</td>
+                        <td class="py-2 px-4 border">{{ item.Calories }}</td>
+                        <td class="py-2 px-4 border">{{ item['Protein(g)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Fat(g)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Carbohydrate(g)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Fiber(g)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Cholesterol(mg)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Sodium(mg)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['Sugar(g)'] }}</td>
+                        <td class="py-2 px-4 border">{{ item['SaturatedFat(g)'] }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="10" class="py-2 px-4 border text-center">No data available</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
