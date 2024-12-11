@@ -84,6 +84,7 @@ CREATE TABLE history_recommendation_food_per_day (
     diet_time DATETIME,
     created_at DATETIME,
     rfboc_activity_level INT,
+    rfboc_meal_schedule_day INT,
     rfboc_diet_type VARCHAR(50),
     rfboc_gender BOOLEAN,
     rfboc_history_of_gastritis BOOLEAN

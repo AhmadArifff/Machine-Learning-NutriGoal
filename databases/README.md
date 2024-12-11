@@ -103,6 +103,7 @@ Tabel ini menyimpan riwayat rekomendasi makanan pengguna per hari.
 | `rfboc_diet_type`  | VARCHAR(50)  | NOT NULL                                    |
 | `rfboc_gender`     | BOOLEAN      | NOT NULL                                    |
 | `rfboc_history_of_gastritis` | BOOLEAN | NOT NULL                                  |
+| `rfboc_meal_schedule_day` | INT | NOT NULL                                  |
 
 ---
 
