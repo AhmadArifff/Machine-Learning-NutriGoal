@@ -366,6 +366,7 @@ def history():
         if not isinstance(recommended_food, dict):
             return jsonify({"error": "Invalid format for 'recommended_food_based_on_calories'"}), 400
         rfboc_meal_schedule_day = recommended_food.get('rfboc_meal_schedule_(day)', 0)  # Default to False
+        rfboc_id = recommended_food.get('rfboc_id', 1)  # Default to False
         rfboc_activity_level = recommended_food.get('rfboc_activity_level', 0)  # Default to 0
         rfboc_diet_type = recommended_food.get('rfboc_diet_type', 'unknown')  # Default to 'unknown'
         rfboc_history_of_gastritis_or_gerd = recommended_food.get('history_of_gastritis_or_gerd', False)  # Default to False
@@ -400,6 +401,7 @@ def history():
         result = {
             "history_recommendation_food_per_day": {
                 "hrfpd_id": 1,
+                "rfboc_id": rfboc_id,
                 "user_id": user_id,
                 "created_at": timestamp,
                 "body_weight": weight,
@@ -677,6 +679,7 @@ def historytest():
                 return jsonify({"error": "Invalid format for 'recommended_food_based_on_calories'"}), 400
 
             # Ambil data dari recommended_food_based_on_calories
+            rfboc_id = recommended_food.get('rfboc_id', 1)
             activity_level = recommended_food.get('rfboc_activity_level', 0)
             diet_type = recommended_food.get('rfboc_diet_type', 'unknown')
             meal_schedule_day = recommended_food.get('rfboc_meal_schedule_(day)', 0)
@@ -714,6 +717,7 @@ def historytest():
                 "rfboc_gender": gender,
                 "history_recommendation_food_per_day": {
                     "hrfpd_id": 1,
+                    "rfboc_id": rfboc_id,
                     "history_food_recommendation": food_recommendation,
                     "food_preference": favorite_food_preference,
                     "body_weight": weight,
