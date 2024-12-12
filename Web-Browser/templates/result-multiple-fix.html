@@ -15,7 +15,7 @@
   <div class="container mx-auto max-w-5xl bg-white rounded-lg shadow-md p-6 space-y-8">
     <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Simulasi Notifikatisi</h1>
         <!-- <form action="http://127.0.0.1:5000/history" method="post" class="space-y-4">-->
-        <form action="/history" method="post" class="space-y-4">
+        <form action="/historytest" method="post" class="space-y-4">
           <!--<h2>Recommended Food Preference</h2>-->
           {% for food in recommended_food_preference %}
             <div>
@@ -94,7 +94,7 @@
             
 
             <!-- Submit Button -->
-            <button type="submit"
+            <button type="submit" id="submitButton"
                 class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 rounded-md shadow-sm transition">
                 Submit
             </button>
@@ -205,6 +205,34 @@
         }
       });
     });
+    document.getElementById("submitButton").addEventListener("click", function () {
+      const form = document.getElementById("jsonForm");
+      const formData = new FormData(form);
+      const json = {};
+
+      formData.forEach((value, key) => {
+          if (json[key]) {
+              // Handle multiple values for the same key
+              if (!Array.isArray(json[key])) {
+                  json[key] = [json[key]];
+              }
+              json[key].push(value);
+          } else {
+              json[key] = value;
+          }
+      });
+
+      fetch('/historytest', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(json),
+      })
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch(error => console.error('Error:', error));
+  });
   </script>
 </body>
 </html>
