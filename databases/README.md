@@ -322,35 +322,39 @@ POST http://0.0.0.0:5000/historytest
 **Request Body** (JSON):
 ```json
 {
-  "rfp_id": ["7757ddc9-5135-4ce7-84e1-8cd700827dfa", "641828d7-ce63-4267-ac3b-d8fd9f6129ee", "46b395f9-0778-4637-b4c5-ba3b25907d09"],
-  "rfboc_id": "1",
-  "name": ["spiced orange and cranberry snacking cake", "orange and passionfruit cream", "strawberry breakfast crepes mexico"],
-  "calories": [324.7, 324.6, 324.4],
-  "carbohydrate(g)": [47.0, 50.2, 51.9],
-  "protein(g)": [3.7, 6.5, 12.3],
-  "fat(g)": [14.2, 11.8, 7.9],
+  "rfp_id": [1, 2, 3],
+  "rfboc_id": 1,
+  "name": [
+    "rice cooker mexican rice",
+    "party rice and noodles",
+    "fruit and nut rice pilaf"
+  ],
+  "calories": [238.2, 238.0, 238.0],
+  "carbohydrate(g)": [40.9, 33.6, 48.4],
+  "protein(g)": [6.9, 5.6, 4.7],
+  "fat(g)": [7.5, 8.9, 3.4],
   "height": 175,
-  "weight": 60,
-  "age": 21,
-  "food_preference_recommendation": ["7757ddc9-5135-4ce7-84e1-8cd700827dfa", "641828d7-ce63-4267-ac3b-d8fd9f6129ee"],
+  "weight": 70,
+  "age": 25,
+  "food_preference_recommendation": [1, 2, 3],
   "favorite_food_preference": [
     {
       "ffp_id": 1,
-      "ffp_name": "orange"
+      "ffp_name": "Chicken"
     },
     {
-      "ffp_id": 2,
-      "ffp_name": "strawberry"
+      "ffp_id": 1,
+      "ffp_name": "Rice"
     }
   ],
   "recommended_food_based_on_calories": {
-    "rfboc_activity_level": 5,
-    "rfboc_diet_type": "keto",
-    "rfboc_meal_schedule_(day)": 2, 
+    "rfboc_activity_level": 3,
+    "rfboc_diet_type": "vegan",
+    "rfboc_meal_schedule_(day)": 3,
     "history_of_gastritis_or_gerd": true
   },
-  "user_id": "1",
-  "gender": false
+  "user_id": 1,
+  "gender": true
 }
 
 ```
@@ -391,35 +395,39 @@ POST http://0.0.0.0:5000/history
 
 ```json
 {
-  "rfp_id": ["7757ddc9-5135-4ce7-84e1-8cd700827dfa", "641828d7-ce63-4267-ac3b-d8fd9f6129ee", "46b395f9-0778-4637-b4c5-ba3b25907d09"],
-  "rfboc_id": "1",
-  "name": ["spiced orange and cranberry snacking cake", "orange and passionfruit cream", "strawberry breakfast crepes mexico"],
-  "calories": [324.7, 324.6, 324.4],
-  "carbohydrate(g)": [47.0, 50.2, 51.9],
-  "protein(g)": [3.7, 6.5, 12.3],
-  "fat(g)": [14.2, 11.8, 7.9],
+  "rfp_id": [1, 2, 3],
+  "rfboc_id": 1,
+  "name": [
+    "rice cooker mexican rice",
+    "party rice and noodles",
+    "fruit and nut rice pilaf"
+  ],
+  "calories": [238.2, 238.0, 238.0],
+  "carbohydrate(g)": [40.9, 33.6, 48.4],
+  "protein(g)": [6.9, 5.6, 4.7],
+  "fat(g)": [7.5, 8.9, 3.4],
   "height": 175,
-  "weight": 60,
-  "age": 21,
-  "food_preference_recommendation": ["7757ddc9-5135-4ce7-84e1-8cd700827dfa", "641828d7-ce63-4267-ac3b-d8fd9f6129ee"],
+  "weight": 70,
+  "age": 25,
+  "food_preference_recommendation": [1, 2, 3],
   "favorite_food_preference": [
     {
       "ffp_id": 1,
-      "ffp_name": "orange"
+      "ffp_name": "Chicken"
     },
     {
-      "ffp_id": 2,
-      "ffp_name": "strawberry"
+      "ffp_id": 1,
+      "ffp_name": "Rice"
     }
   ],
   "recommended_food_based_on_calories": {
-    "rfboc_activity_level": 5,
-    "rfboc_diet_type": "keto",
-    "rfboc_meal_schedule_(day)": 2, 
+    "rfboc_activity_level": 3,
+    "rfboc_diet_type": "vegan",
+    "rfboc_meal_schedule_(day)": 3,
     "history_of_gastritis_or_gerd": true
   },
-  "user_id": "1",
-  "gender": false
+  "user_id": 1,
+  "gender": true
 }
 
 ```

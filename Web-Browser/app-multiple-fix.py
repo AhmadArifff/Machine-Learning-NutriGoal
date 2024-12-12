@@ -24,6 +24,9 @@ food_data = pd.read_csv('../data/combine-dataset-kategori.csv')
 # Initialize Flask
 app = Flask(__name__)
 
+ffn_counter = 1
+ffp_counter = 1
+rfboc_counter = 1
 # Main function without accuracy_model1 and accuracy_model2 parameters
 def output_model(age, height, weight, gender, activity_level, food_preference, diet_category, has_gastric_issue):
     try:
@@ -155,7 +158,18 @@ def output_model(age, height, weight, gender, activity_level, food_preference, d
         # Handle multiple food preferences
         favorite_food_names = []
         favorite_food_preferences = []
+        rfp_id = 0
+        user_id = 1
+        global ffn_counter, ffp_counter, rfboc_counter  # Deklarasi variabel global
+        # Assign unique IDs using counters
+        ffn_id = ffn_counter
+        ffp_id = ffp_counter
+        rfboc_id = rfboc_counter
         
+        # Increment counters
+        ffn_counter += 1
+        ffp_counter += 1
+        rfboc_counter += 1
         # Loop through food preferences and generate favorite food entries
         for idx, name in enumerate(food_preference):
             favorite_food_names.append({
@@ -204,9 +218,11 @@ def output_model(age, height, weight, gender, activity_level, food_preference, d
                     (ffp for ffp in favorite_food_preferences if ffp["ffp_name"].lower() in row["Name"].lower()), None
                 )
                 if matched_preference:
+                    rfp_id += 1 
                     matched_recommended_food.append({
-                        "rfp_id": str(uuid.uuid4()),  # Unique ID for recommended food preference
-                        "ffp_id": matched_preference["ffp_id"],  # Link to the matched favorite food preference
+                        "rfp_id": rfp_id,  # Unique ID for recommended food preference
+                        # "ffp_id": matched_preference["ffp_id"],  # Link to the matched favorite food preference
+                        "ffp_id": ffp_id,  # Link to the matched favorite food preference
                         "rfboc_id": 1,  # Example constant value
                         **{k: v for k, v in row.items() if k in filtered_food.columns},  # Copy relevant food columns
                         "rfp_created_at": timestamp,
@@ -215,15 +231,15 @@ def output_model(age, height, weight, gender, activity_level, food_preference, d
         return {
             # "favorite_food_name": favorite_food_names,
             "favorite_food_name": {
-                "ffn_id": str(uuid.uuid4()),
+                "ffn_id": ffn_id,
                 "ffn_name": food_preference,
                 "ffn_created_at": timestamp,
                 "ffn_updated_at": timestamp,
             },
             # "favorite_food_preference": favorite_food_preferences,
             "favorite_food_preference": {
-                "ffp_id": str(uuid.uuid4()),
-                "ffn_id": str(uuid.uuid4()),
+                "ffp_id": ffp_id,
+                "ffn_id": ffn_id,
                 "ffp_name": food_preference,
                 "ffp_created_at": timestamp,
                 "ffp_updated_at": timestamp,
@@ -231,8 +247,8 @@ def output_model(age, height, weight, gender, activity_level, food_preference, d
             "recommended_food_preference": matched_recommended_food,
             
             "recommended_food_based_on_calories": {
-                "rfboc_id": 1,
-                "user_id": 1,
+                "rfboc_id": rfboc_id,
+                "user_id": user_id,
                 "rfboc_diet_type": diet_category,
                 "rfboc_history_of_gastritis_or_gerd": has_gastric_issue,
                 "rfboc_age": age,
@@ -319,7 +335,10 @@ def history():
                 return jsonify({"error": "Invalid or missing JSON body."}), 400
             
             food_preferences = data.get('food_preference_recommendation', [])
+            favorite_food_preference = data.get('favorite_food_preference', [])
         else:
+            data = request.form  # Use form data
+            print("Received form data:", data)  # Debug print
             return jsonify({"error": "Content-Type must be application/json"}), 400
         
         # Validate food preferences
@@ -394,6 +413,7 @@ def history():
                 "diet_time": timestamp
             },
             "history_food_recommendation": food_recommendation,
+            "food_preference": favorite_food_preference,
         }
 
         return jsonify(result), 200
@@ -403,8 +423,6 @@ def history():
 
     except Exception as e:
         return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
-
-
 
 
 # @app.route('/history', methods=['GET', 'POST'])
@@ -498,126 +516,223 @@ def history():
 #         except Exception as e:
 #             # Tangkap error lain dan kembalikan respons error
 #             return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+
+
     
     
+# @app.route('/historytest', methods=['GET', 'POST'])
+# def historytest():
+#     try:
+#         # Check Content-Type from the request
+#         if request.content_type == 'application/json':
+#             # Parsing data from JSON body
+#             data = request.get_json()
+#             if not data:
+#                 data = request.form  # Use form data
+#                 return jsonify({"error": "Invalid or missing JSON body."}), 400
+            
+#             food_preferences = data.get('food_preference_recommendation', [])
+#             favorite_food_preference = data.get('favorite_food_preference', [])
+#         else:
+#             data = request.form  # Use form data
+#             return jsonify({"error": "Content-Type must be application/json"}), 400
+        
+#         # Validate food preferences
+#         if not food_preferences:
+#             return jsonify({"error": "Missing food preference."}), 400
+        
+#         if not favorite_food_preference:
+#             return jsonify({"error": "Food preferences are missing in the input data."}), 400
+
+        
+#         # Extract data from JSON
+#         weight = float(data.get('weight')) if data.get('weight') else None
+#         age = int(data.get('age')) if data.get('age') else None
+#         height = int(data.get('height')) if data.get('height') else None
+#         selected_ids = food_preferences  # List of selected food preferences
+
+#         # Extract additional data from JSON
+#         all_rfp_ids = data.get('rfp_id', [])
+#         all_names = data.get('name', [])
+#         all_calories = data.get('calories', [])
+#         all_carbohydrate = data.get('carbohydrate(g)', [])
+#         all_protein = data.get('protein(g)', [])
+#         all_fat = data.get('fat(g)', [])
+#         rfboc_gender = data.get('rfboc_gender', False)
+#         user_id = data.get('user_id')
+        
+#         # Extract nested JSON for recommended_food_based_on_calories
+#         recommended_food = data.get('recommended_food_based_on_calories', {})
+#         if not isinstance(recommended_food, dict):
+#             return jsonify({"error": "Invalid format for 'recommended_food_based_on_calories'"}), 400
+#         rfboc_meal_schedule_day = recommended_food.get('rfboc_meal_schedule_(day)', 0)  # Default to False
+#         rfboc_activity_level = recommended_food.get('rfboc_activity_level', 0)  # Default to 0
+#         rfboc_diet_type = recommended_food.get('rfboc_diet_type', 'unknown')  # Default to 'unknown'
+#         rfboc_history_of_gastritis_or_gerd = recommended_food.get('history_of_gastritis_or_gerd', False)  # Default to False
+        
+#         # Pastikan 'has_gastric_issue' di-handle dengan benar
+#         rfboc_history_of_gastritis_or_gerd = data.get('rfboc_history_of_gastritis_or_gerd', False)
+#         if isinstance(rfboc_history_of_gastritis_or_gerd, str):
+#             rfboc_history_of_gastritis_or_gerd = rfboc_history_of_gastritis_or_gerd.lower() == 'true'
+#         elif not isinstance(rfboc_history_of_gastritis_or_gerd, bool):
+#             rfboc_history_of_gastritis_or_gerd = False
+        
+#         # Ambil data 'preference' dari elemen yang dihasilkan dengan perulangan
+#         favorite_food_preference = []
+#         index = 1  # Inisialisasi indeks untuk elemen input
+#         while True:
+#             ffp_id_key = f"ffp_id_{index}"
+#             ffp_name_key = f"ffp_name_{index}"
+            
+#             # Cek apakah elemen berikutnya ada
+#             ffp_id = data.get(ffp_id_key)
+#             ffp_name = data.get(ffp_name_key)
+            
+#             if not ffp_id or not ffp_name:  # Jika data tidak ditemukan, keluar dari loop
+#                 break
+            
+#             # Tambahkan data ke daftar preference
+#             favorite_food_preference.append({
+#                 "id": ffp_id,
+#                 "name": ffp_name
+#             })
+#             index += 1  # Tingkatkan indeks
+
+
+#         # Validasi input
+#         if not (weight and age and height and selected_ids):
+#             return jsonify({"error": "Missing or invalid input data"}), 400
+
+#         # Filter makanan sesuai ID yang dipilih
+#         food_recommendation = []
+#         for i in range(len(all_rfp_ids)):
+#             if all_rfp_ids[i] in selected_ids:
+#                 food = {
+#                     "hfr_id": i+1,
+#                     "hrfpd_id": 1,
+#                     "rfp_id": all_rfp_ids[i],
+#                     "hfr_name": all_names[i],
+#                     "hfr_calories": all_calories[i] if i < len(all_calories) else None,
+#                     "hfr_carbohydrate(g)": all_carbohydrate[i] if i < len(all_carbohydrate) else None,
+#                     "hfr_protein(g)": all_protein[i] if i < len(all_protein) else None,
+#                     "hfr_fat(g)": all_fat[i] if i < len(all_fat) else None
+#                 }
+#                 food_recommendation.append(food)
+
+#         # Buat timestamp
+#         timestamp = datetime.utcnow().isoformat()
+
+#         # Struktur JSON output
+#         result = {
+#             "user_id": user_id,
+#             "rfboc_gender": True if rfboc_gender == 1 else False,
+#             "history_recommendation_food_per_day": {
+#                 "hrfpd_id": 1,
+#                 "history_food_recommendation": food_recommendation,
+#                 "food_preference": favorite_food_preference,
+#                 "body_weight": weight,
+#                 "age": age,
+#                 "height": height,
+#                 "rfboc_activity_level": rfboc_activity_level,
+#                 "rfboc_diet_type": rfboc_diet_type,
+#                 "rfboc_history_of_gastritis_or_gerd": False if rfboc_history_of_gastritis_or_gerd else True,
+#                 "rfboc_meal_schedule_day": rfboc_meal_schedule_day,
+#                 "created_at": timestamp,
+#                 "diet_time": timestamp
+#             },
+#         }
+
+#         return jsonify(result), 200
+
+#     except Exception as e:
+#         # Tangkap error lain dan kembalikan respons error
+#         return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
+
+
 @app.route('/historytest', methods=['GET', 'POST'])
 def historytest():
     try:
-        # Check Content-Type from the request
         if request.content_type == 'application/json':
-            # Parsing data from JSON body
+            # Parsing data dari JSON body
             data = request.get_json()
             if not data:
                 return jsonify({"error": "Invalid or missing JSON body."}), 400
             
+            # Ambil data dari JSON input
+            weight = data.get('weight')
+            height = data.get('height')
+            age = data.get('age')
+            user_id = data.get('user_id')
+            gender = data.get('gender', False)
             food_preferences = data.get('food_preference_recommendation', [])
+            favorite_food_preference = data.get('favorite_food_preference', [])
+            recommended_food = data.get('recommended_food_based_on_calories', {})
+
+            # Validasi input wajib
+            if not all([weight, height, age, food_preferences]):
+                return jsonify({"error": "Missing or invalid input data."}), 400
+
+            # Validasi tipe data pada `recommended_food`
+            if not isinstance(recommended_food, dict):
+                return jsonify({"error": "Invalid format for 'recommended_food_based_on_calories'"}), 400
+
+            # Ambil data dari recommended_food_based_on_calories
+            activity_level = recommended_food.get('rfboc_activity_level', 0)
+            diet_type = recommended_food.get('rfboc_diet_type', 'unknown')
+            meal_schedule_day = recommended_food.get('rfboc_meal_schedule_(day)', 0)
+            has_gastric_issue = recommended_food.get('history_of_gastritis_or_gerd', False)
+
+            # Filter makanan sesuai ID preferensi
+            all_rfp_ids = data.get('rfp_id', [])
+            all_names = data.get('name', [])
+            all_calories = data.get('calories', [])
+            all_carbohydrate = data.get('carbohydrate(g)', [])
+            all_protein = data.get('protein(g)', [])
+            all_fat = data.get('fat(g)', [])
+            food_recommendation = []
+
+            for i in range(len(all_rfp_ids)):
+                if all_rfp_ids[i] in food_preferences:
+                    food = {
+                        "hfr_id": i + 1,
+                        "hrfpd_id": 1,
+                        "rfp_id": all_rfp_ids[i],
+                        "hfr_name": all_names[i] if i < len(all_names) else None,
+                        "hfr_calories": all_calories[i] if i < len(all_calories) else None,
+                        "hfr_carbohydrate(g)": all_carbohydrate[i] if i < len(all_carbohydrate) else None,
+                        "hfr_protein(g)": all_protein[i] if i < len(all_protein) else None,
+                        "hfr_fat(g)": all_fat[i] if i < len(all_fat) else None
+                    }
+                    food_recommendation.append(food)
+
+            # Buat timestamp
+            timestamp = datetime.utcnow().isoformat()
+
+            # Struktur JSON output
+            result = {
+                "user_id": user_id,
+                "rfboc_gender": gender,
+                "history_recommendation_food_per_day": {
+                    "hrfpd_id": 1,
+                    "history_food_recommendation": food_recommendation,
+                    "food_preference": favorite_food_preference,
+                    "body_weight": weight,
+                    "age": age,
+                    "height": height,
+                    "rfboc_activity_level": activity_level,
+                    "rfboc_diet_type": diet_type,
+                    "rfboc_history_of_gastritis_or_gerd": has_gastric_issue,
+                    "rfboc_meal_schedule_day": meal_schedule_day,
+                    "created_at": timestamp,
+                    "diet_time": timestamp
+                },
+            }
+
+            return jsonify(result), 200
         else:
             return jsonify({"error": "Content-Type must be application/json"}), 400
-        
-        # Validate food preferences
-        if not food_preferences:
-            return jsonify({"error": "Missing food preference."}), 400
-        
-        # Extract data from JSON
-        weight = float(data.get('weight')) if data.get('weight') else None
-        age = int(data.get('age')) if data.get('age') else None
-        height = int(data.get('height')) if data.get('height') else None
-        selected_ids = food_preferences  # List of selected food preferences
-
-        # Extract additional data from JSON
-        all_rfp_ids = data.get('rfp_id', [])
-        all_names = data.get('name', [])
-        all_calories = data.get('calories', [])
-        all_carbohydrate = data.get('carbohydrate(g)', [])
-        all_protein = data.get('protein(g)', [])
-        all_fat = data.get('fat(g)', [])
-        rfboc_gender = data.get('rfboc_gender', False)
-        user_id = data.get('user_id')
-        
-        # Extract nested JSON for recommended_food_based_on_calories
-        recommended_food = data.get('recommended_food_based_on_calories', {})
-        if not isinstance(recommended_food, dict):
-            return jsonify({"error": "Invalid format for 'recommended_food_based_on_calories'"}), 400
-        rfboc_meal_schedule_day = recommended_food.get('rfboc_meal_schedule_(day)', 0)  # Default to False
-        rfboc_activity_level = recommended_food.get('rfboc_activity_level', 0)  # Default to 0
-        rfboc_diet_type = recommended_food.get('rfboc_diet_type', 'unknown')  # Default to 'unknown'
-        rfboc_history_of_gastritis_or_gerd = recommended_food.get('history_of_gastritis_or_gerd', False)  # Default to False
-        
-        # Pastikan 'has_gastric_issue' di-handle dengan benar
-        rfboc_history_of_gastritis_or_gerd = data.get('rfboc_history_of_gastritis_or_gerd', False)
-        if isinstance(rfboc_history_of_gastritis_or_gerd, str):
-            rfboc_history_of_gastritis_or_gerd = rfboc_history_of_gastritis_or_gerd.lower() == 'true'
-        elif not isinstance(rfboc_history_of_gastritis_or_gerd, bool):
-            rfboc_history_of_gastritis_or_gerd = False
-        
-        # Ambil data 'preference' dari elemen yang dihasilkan dengan perulangan
-        favorite_food_preference = []
-        index = 1  # Inisialisasi indeks untuk elemen input
-        while True:
-            ffp_id_key = f"ffp_id_{index}"
-            ffp_name_key = f"ffp_name_{index}"
-            
-            # Cek apakah elemen berikutnya ada
-            ffp_id = data.get(ffp_id_key)
-            ffp_name = data.get(ffp_name_key)
-            
-            if not ffp_id or not ffp_name:  # Jika data tidak ditemukan, keluar dari loop
-                break
-            
-            # Tambahkan data ke daftar preference
-            favorite_food_preference.append({
-                "id": ffp_id,
-                "name": ffp_name
-            })
-            index += 1  # Tingkatkan indeks
-
-        # Validasi input
-        if not (weight and age and height and selected_ids):
-            return jsonify({"error": "Missing or invalid input data"}), 400
-
-        # Filter makanan sesuai ID yang dipilih
-        food_recommendation = []
-        for i in range(len(all_rfp_ids)):
-            if all_rfp_ids[i] in selected_ids:
-                food = {
-                    "hfr_id": i,
-                    "hrfpd_id": 1,
-                    "rfp_id": all_rfp_ids[i],
-                    "hfr_name": all_names[i],
-                    "hfr_calories": all_calories[i] if i < len(all_calories) else None,
-                    "hfr_carbohydrate(g)": all_carbohydrate[i] if i < len(all_carbohydrate) else None,
-                    "hfr_protein(g)": all_protein[i] if i < len(all_protein) else None,
-                    "hfr_fat(g)": all_fat[i] if i < len(all_fat) else None
-                }
-                food_recommendation.append(food)
-
-        # Buat timestamp
-        timestamp = datetime.utcnow().isoformat()
-
-        # Struktur JSON output
-        result = {
-            "user_id": user_id,
-            "rfboc_gender": True if rfboc_gender == 1 else False,
-            "history_recommendation_food_per_day": {
-                "hrfpd_id": 1,
-                "history_food_recommendation": food_recommendation,
-                "food_preference": favorite_food_preference,
-                "body_weight": weight,
-                "age": age,
-                "height": height,
-                "rfboc_activity_level": rfboc_activity_level,
-                "rfboc_diet_type": rfboc_diet_type,
-                "rfboc_history_of_gastritis_or_gerd": False if rfboc_history_of_gastritis_or_gerd else True,
-                "rfboc_meal_schedule_day": rfboc_meal_schedule_day,
-                "created_at": timestamp,
-                "diet_time": timestamp
-            },
-        }
-
-        return jsonify(result), 200
 
     except Exception as e:
-        # Tangkap error lain dan kembalikan respons error
         return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
 
